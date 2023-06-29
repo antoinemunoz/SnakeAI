@@ -17,6 +17,8 @@ Point = namedtuple('Point', 'x, y')
 
 WHITE = (255, 255, 255)
 RED = (200, 0, 0)
+GREEN1 = (0, 255, 0)
+GREEN2 = (0, 100, 0)
 BLUE1 = (0, 0, 255)
 BLUE2 = (0, 100, 255)
 BLACK = (0, 0, 0)
@@ -56,15 +58,16 @@ class SnakeGameAI:
     def update_ui(self):
         self.display.fill(BLACK)
         for pt in self.snake:
-            pygame.draw.rect(self.display, BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
-            pygame.draw.rect(self.display, BLUE2, pygame.Rect(pt.x+4, pt.y+4, 12, 12))
+            pygame.draw.rect(self.display, GREEN2, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
+            pygame.draw.rect(self.display, GREEN1, pygame.Rect(pt.x+4, pt.y+4, 12, 12))
 
         pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
         score_text = font.render("Score: " + str(self.score), True, WHITE)
         self.display.blit(score_text, [0, 0])
         pygame.display.flip()
 
-    def move(self, action):        clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
+    def move(self, action):
+        clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
         idx = clock_wise.index(self.direction)
 
         if np.array_equal(action, [1, 0, 0]):
@@ -98,7 +101,7 @@ class SnakeGameAI:
                 pygame.quit()
                 quit()
 
-        self.move(action)
+        self.move(action)  # update the head
         self.snake.insert(0, self.head)
 
         reward = 0
