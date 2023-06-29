@@ -10,8 +10,8 @@ class AgentConfig:
     MAX_MEMORY = 100_000
     BATCH_SIZE = 1000
     LR = 0.001
-    GAMMA = 0.9  # discount rate
-    RANDOMNESS = 0  # randomness
+    GAMMA = 0.9
+    RANDOMNESS = 0
 
 class Agent:
 
@@ -36,35 +36,30 @@ class Agent:
         dir_d = game.direction == Direction.DOWN
 
         state = [
-            # Danger straight
             (dir_r and game.is_collision(point_r)) or
             (dir_l and game.is_collision(point_l)) or
             (dir_u and game.is_collision(point_u)) or
             (dir_d and game.is_collision(point_d)),
 
-            # Danger right
             (dir_u and game.is_collision(point_r)) or
             (dir_d and game.is_collision(point_l)) or
             (dir_l and game.is_collision(point_u)) or
             (dir_r and game.is_collision(point_d)),
 
-            # Danger left
             (dir_d and game.is_collision(point_r)) or
             (dir_u and game.is_collision(point_l)) or
             (dir_r and game.is_collision(point_u)) or
             (dir_l and game.is_collision(point_d)),
 
-            # Move direction
             dir_l,
             dir_r,
             dir_u,
             dir_d,
 
-            # Food location
-            game.food.x < game.head.x,  # food left
-            game.food.x > game.head.x,  # food right
-            game.food.y < game.head.y,  # food up
-            game.food.y > game.head.y  # food down
+            game.food.x < game.head.x,
+            game.food.x > game.head.x,
+            game.food.y < game.head.y,
+            game.food.y > game.head.y
             ]
 
         return np.array(state, dtype=int)
