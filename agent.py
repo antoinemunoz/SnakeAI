@@ -11,13 +11,16 @@ class AgentConfig:
     BATCH_SIZE = 1000
     LR = 0.001
     GAMMA = 0.9
-    RANDOMNESS = 0
+    EPSILON = 1
+    EPSILON_MIN = 0.01
+    EPSILON_DECAY = 0.995
 
 class Agent:
-
     def __init__(self):
         self.n_games = 0
-        self.epsilon = AgentConfig.RANDOMNESS
+        self.epsilon = AgentConfig.EPSILON
+        self.epsilon_min = AgentConfig.EPSILON_MIN
+        self.epsilon_decay = AgentConfig.EPSILON_DECAY
         self.gamma = AgentConfig.GAMMA
         self.memory = deque(maxlen=AgentConfig.MAX_MEMORY)
         self.model = Linear_QNet(11, 256, 3)
@@ -76,9 +79,8 @@ class Agent:
         self.trainer.train_step(state, action, reward, next_state, done)
 
     def get_action(self, state):
-        self.epsilon = 80 - self.n_games
         final_move = [0, 0, 0]
-        if random.randint(0, 200) < self.epsilon:
+        if np.random.rand() <= self.epsilon:
             move = random.randint(0, 2)
             final_move[move] = 1
         else:
@@ -86,6 +88,9 @@ class Agent:
             prediction = self.model(state_tensor)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
+
+        if self.epsilon > self.epsilon_min:
+            self.epsilon *= self.epsilon_decay
 
         return final_move
 

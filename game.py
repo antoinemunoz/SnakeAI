@@ -101,7 +101,7 @@ class SnakeGameAI:
                 pygame.quit()
                 quit()
 
-        self.move(action)  # update the head
+        self.move(action)
         self.snake.insert(0, self.head)
 
         reward = 0
